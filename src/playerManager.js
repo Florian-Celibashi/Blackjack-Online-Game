@@ -7,14 +7,28 @@ export async function getOrCreatePlayer() {
 
     if (playerId) {
         console.log('Player found in local storage:', playerId)
-        return playerId
+
+        // Fetch full player info from Supabase
+        const { data, error } = await supabase
+            .from('blackjack_players')
+            .select()
+            .eq('id', playerId)
+            .single()
+
+        if (error) {
+            console.error('Error fetching player data:', error)
+            throw error
+        }
+
+        console.log('Loaded player data:', data)
+        return data
     }
 
     const username = 'Player_' + Math.floor(Math.random() * 100000)
 
     const { data, error } = await supabase
         .from('blackjack_players')
-        .insert([{ username }])
+        .insert([{ username, is_guest: true }])
         .select()
 
     if (error) {
@@ -22,9 +36,9 @@ export async function getOrCreatePlayer() {
         throw error
     }
 
-    const newPlayer = data[0]
-    localStorage.setItem(LOCAL_STORAGE_KEY, newPlayer.id)
-    console.log('New player created:', newPlayer.id)
+    const player = data[0]
+    localStorage.setItem(LOCAL_STORAGE_KEY, player.id)
+    console.log('New player created:', player)
 
-    return newPlayer.id
+    return player
 }

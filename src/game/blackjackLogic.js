@@ -1,23 +1,30 @@
 import { createDeck, shuffleDeck } from './deck'
-
-let deck = []
-let playerHand = []
-let dealerHand = []
+import { calculateHandValue } from './blackjackScoring'
 
 export function startGame() {
-    deck = shuffleDeck(createDeck())
-    playerHand = [deck.pop(), deck.pop()]
-    dealerHand = [deck.pop(), deck.pop()]
+    const deck = shuffleDeck(createDeck());
+    const playerHand = [deck.pop(), deck.pop()];
+    const dealerHand = [deck.pop(), deck.pop()];
 
     return {
+        deck,
         playerHand,
-        dealerHand,
-        remainingDeck: deck
-    }
+        dealerHand
+    };
 }
 
-export function hit() {
-    console.log("Hit called");
+export function hit(deck, playerHand) {
+    const deckCopy = [...deck];
+    const newCard = deckCopy.pop();
+    const newPlayerHand = [...playerHand, newCard];
+    const handValue = calculateHandValue(newPlayerHand);
+    const isBust = handValue > 21;
+
+    return {
+        deck: deckCopy,
+        playerHand: newPlayerHand,
+        isBust
+    };
 }
 
 export function stand() {

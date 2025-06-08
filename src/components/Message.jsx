@@ -3,15 +3,18 @@ import React from 'react'
 function Message({ gameState, username }) {
     let message = 'Your turn, press (H) to Hit or (S) to Stand.'
 
-    if (gameState === 'player_bust') {
+    if (gameState === 'player_busts') {
         message = 'You bust! Press space to play again.'
-    } else if (gameState === 'lose') {
+    } else if (gameState === 'dealer_wins') {
         message = 'You lose! Press space to play again.'
-    } else if (gameState === 'win') {
+    } else if (gameState === 'player_wins') {
         message = 'You win! Press space to play again.'
     } else if (gameState === 'tie') {
         message = "It's a tie! Press space to play again."
-    } else if (gameState === 'multiplayerWin' && username) {
+    } else if (gameState === 'dealer_busts') {
+        message = 'Dealer busts! Press space to play again.'
+    }
+    else if (gameState === 'multiplayerWin' && username) {
         message = `${username} wins!`
     }
 

@@ -5,7 +5,7 @@ import DealerHand from './components/DealerHand'
 import PlayerHand from './components/PlayerHand'
 import Message from './components/Message'
 import Controls from './components/Controls'
-import { startGame, hit } from './game/blackjackLogic'
+import { startGame, hit, dealerTurn } from './game/blackjackLogic'
 
 function App() {
   const [playerId, setPlayerId] = useState(null)
@@ -28,12 +28,12 @@ function App() {
   }, [])
 
   const handleHit = () => {
-    const { deck: newDeck, playerHand: newPlayerHand, isBust } = hit(deck, playerHand)
-    setDeck(newDeck)
-    setPlayerHand(newPlayerHand)
+    const { deck: newDeck, playerHand: newPlayerHand, result } = hit(deck, playerHand);
+    setDeck(newDeck);
+    setPlayerHand(newPlayerHand);
 
-    if (isBust) {
-      setGameState('player_bust')
+    if (result) {
+      setGameState(result);
     }
   }
 
@@ -59,6 +59,15 @@ function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [gameState]);
+
+  useEffect(() => {
+    if (gameState === 'dealer_turn') {
+      const { deck: newDeck, dealerHand: newDealerHand, result } = dealerTurn(deck, dealerHand, playerHand);
+      setDeck(newDeck);
+      setDealerHand(newDealerHand);
+      setGameState(result);
+    }
+  }, [gameState, deck, dealerHand, playerHand]);
 
   return (
     <div className="App">

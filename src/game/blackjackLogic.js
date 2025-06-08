@@ -18,15 +18,47 @@ export function hit(deck, playerHand) {
     const newCard = deckCopy.pop();
     const newPlayerHand = [...playerHand, newCard];
     const handValue = calculateHandValue(newPlayerHand);
-    const isBust = handValue > 21;
+
+    let result = null;
+    if (handValue > 21) {
+        result = 'player_busts';
+    } else if (handValue === 21) {
+        result = 'dealer_turn';
+    }
 
     return {
         deck: deckCopy,
         playerHand: newPlayerHand,
-        isBust
+        result
     };
 }
 
-export function stand() {
-    console.log("Stand called");
+export function dealerTurn(deck, dealerHand, playerHand) {
+    let deckCopy = [...deck];
+    let dealerHandCopy = [...dealerHand];
+
+    while (calculateHandValue(dealerHandCopy) < 17) {
+        const newCard = deckCopy.pop();
+        dealerHandCopy.push(newCard);
+    }
+
+    const dealerValue = calculateHandValue(dealerHandCopy);
+    const playerValue = calculateHandValue(playerHand);
+
+    let result = '';
+    if (dealerValue > 21) {
+        result = 'dealer_busts';
+    } else if (dealerValue > playerValue) {
+        result = 'dealer_wins';
+    } else if (dealerValue < playerValue) {
+        result = 'player_wins';
+    } else {
+        result = 'tie';
+    }
+
+    return {
+        deck: deckCopy,
+        dealerHand: dealerHandCopy,
+        result
+    };
 }

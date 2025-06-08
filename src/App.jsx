@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import { getOrCreatePlayer } from './playerManager'
+import DealerHand from './components/DealerHand'
 import PlayerHand from './components/PlayerHand'
 import Message from './components/Message'
 import Controls from './components/Controls'
@@ -36,6 +37,10 @@ function App() {
     }
   }
 
+  function handleStand() {
+    setGameState('dealer_turn');
+  }
+
   const startNewRound = () => {
     const { deck, playerHand, dealerHand } = startGame();
     setDeck(deck);
@@ -59,7 +64,8 @@ function App() {
     <div className="App">
       <Message gameState={gameState} />
       <PlayerHand hand={playerHand} />
-      <Controls onHit={handleHit} gameState={gameState} />
+      <Controls onHit={handleHit} onStand={handleStand} gameState={gameState} />
+      <DealerHand hand={dealerHand} gameState={gameState} />
     </div>
   )
 }

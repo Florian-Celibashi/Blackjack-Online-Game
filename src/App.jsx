@@ -10,7 +10,7 @@ function App() {
   const [playerId, setPlayerId] = useState(null)
   const [playerHand, setPlayerHand] = useState([])
   const [dealerHand, setDealerHand] = useState([])
-  const [gameState, setGameState] = useState('setup')
+  const [gameState, setGameState] = useState('player_turn')
   const [deck, setDeck] = useState([])
 
   useEffect(() => {
@@ -22,7 +22,6 @@ function App() {
       setDeck(deck)
       setPlayerHand(playerHand)
       setDealerHand(dealerHand)
-      setGameState('player_turn')
     }
     init()
   }, [])
@@ -36,6 +35,25 @@ function App() {
       setGameState('player_bust')
     }
   }
+
+  const startNewRound = () => {
+    const { deck, playerHand, dealerHand } = startGame();
+    setDeck(deck);
+    setPlayerHand(playerHand);
+    setDealerHand(dealerHand);
+    setGameState('player_turn');
+  };
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.code === 'Space' && gameState !== 'player_turn' && gameState !== 'dealer_turn') {
+        startNewRound();
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [gameState]);
 
   return (
     <div className="App">

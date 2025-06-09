@@ -5,6 +5,7 @@ import DealerHand from './components/DealerHand'
 import PlayerHand from './components/PlayerHand'
 import Message from './components/Message'
 import Controls from './components/Controls'
+import Leaderboard from './components/Leaderboard'
 import { startGame, hit, dealerTurn } from './game/blackjackLogic'
 
 function App() {
@@ -70,7 +71,8 @@ function App() {
   }, [gameState, deck, dealerHand, playerHand]);
 
   return (
-    <div className="App">
+    <div className="App relative">
+      <Leaderboard />
       <Message gameState={gameState} />
       <PlayerHand hand={playerHand} />
       <Controls onHit={handleHit} onStand={handleStand} gameState={gameState} />

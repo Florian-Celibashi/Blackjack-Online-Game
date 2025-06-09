@@ -6,11 +6,13 @@ export default function Modal({ isOpen, onClose, title, children }) {
         <Transition appear show={isOpen} as={Fragment}>
             <Dialog as="div" className="fixed inset-0 z-[9999] flex items-center justify-center" onClose={onClose}>
                 <div className="fixed inset-0 bg-black/60" />
-                <div className="bg-white p-6 rounded shadow-lg z-50">
-                    <Dialog.Title className="text-xl font-bold mb-4 text-black">{title}</Dialog.Title>
+                <div className="bg-black p-12 shadow-lg rounded-3xl z-50 w-4/5">
+                    <Dialog.Title className="text-3xl lg:text-4xl font-bold mb-4 text-white text-center">
+                        {title}
+                    </Dialog.Title>
                     {children}
                     <button
-                        className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+                        className="mt-6 bg-red-700 hover:bg-red-800 text-white px-3 py-1 rounded-xl"
                         onClick={onClose}
                     >
                         Close

@@ -6,10 +6,15 @@ export function startGame() {
     const playerHand = [deck.pop(), deck.pop()];
     const dealerHand = [deck.pop(), deck.pop()];
 
+    const playerValue = calculateHandValue(playerHand);
+
+    const result = playerValue === 21 ? 'dealer_turn' : null;
+
     return {
         deck,
         playerHand,
-        dealerHand
+        dealerHand,
+        result
     };
 }
 

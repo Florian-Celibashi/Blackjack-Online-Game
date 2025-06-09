@@ -20,10 +20,11 @@ function App() {
       const player = await getOrCreatePlayer()
       setPlayerId(player.id)
 
-      const { deck, playerHand, dealerHand } = startGame()
-      setDeck(deck)
-      setPlayerHand(playerHand)
-      setDealerHand(dealerHand)
+      const { deck, playerHand, dealerHand, result } = startGame();
+      setDeck(deck);
+      setPlayerHand(playerHand);
+      setDealerHand(dealerHand);
+      setGameState(result ?? 'player_turn');
     }
     init()
   }, [])
@@ -43,11 +44,11 @@ function App() {
   }
 
   const startNewRound = () => {
-    const { deck, playerHand, dealerHand } = startGame();
+    const { deck, playerHand, dealerHand, result } = startGame();
     setDeck(deck);
     setPlayerHand(playerHand);
     setDealerHand(dealerHand);
-    setGameState('player_turn');
+    setGameState(result ?? 'player_turn');
   };
 
   useEffect(() => {

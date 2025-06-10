@@ -28,7 +28,7 @@ function App() {
   const [username, setUsername] = useState('')
   const [showScoreboard, setShowScoreboard] = useState(true)
   const [showControls, setShowControls] = useState(true)
-  const [playAmbiance, setPlayAmbiance] = useState(true)
+  const [playAmbiance, setPlayAmbiance] = useState(false)
   const [playSfx, setPlaySfx] = useState(true)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const prevGameState = useRef(null)

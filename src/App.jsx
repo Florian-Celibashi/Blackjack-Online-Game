@@ -41,14 +41,33 @@ function App() {
         setAutoOpenTutorial(true)
       }
 
-      const { deck, playerHand, dealerHand, result } = startGame();
-      setDeck(deck);
-      setPlayerHand(playerHand);
-      setDealerHand(dealerHand);
-      setGameState(result ?? 'player_turn');
+      const saved = localStorage.getItem('game_state')
+      if (saved) {
+        try {
+          const state = JSON.parse(saved)
+          setDeck(state.deck || [])
+          setPlayerHand(state.playerHand || [])
+          setDealerHand(state.dealerHand || [])
+          setGameState(state.gameState || 'player_turn')
+          return
+        } catch (e) {
+          console.error('Failed to parse saved game state', e)
+        }
+      }
+
+      const { deck, playerHand, dealerHand, result } = startGame()
+      setDeck(deck)
+      setPlayerHand(playerHand)
+      setDealerHand(dealerHand)
+      setGameState(result ?? 'player_turn')
     }
     init()
   }, [])
+
+  useEffect(() => {
+    const state = { deck, playerHand, dealerHand, gameState }
+    localStorage.setItem('game_state', JSON.stringify(state))
+  }, [deck, playerHand, dealerHand, gameState])
 
   const handleHit = () => {
     const { deck: newDeck, playerHand: newPlayerHand, result } = hit(deck, playerHand);
@@ -146,14 +165,13 @@ function App() {
       )}
       <Message gameState={gameState} />
       <PlayerHand hand={playerHand} />
-      {showControls && (
-        <Controls
-          onHit={handleHit}
-          onStand={handleStand}
-          gameState={gameState}
-          disabled={settingsOpen}
-        />
-      )}
+      <Controls
+        onHit={handleHit}
+        onStand={handleStand}
+        gameState={gameState}
+        disabled={settingsOpen}
+        visible={showControls}
+      />
       <DealerHand hand={dealerHand} gameState={gameState} />
       <Settings
         playerId={playerId}

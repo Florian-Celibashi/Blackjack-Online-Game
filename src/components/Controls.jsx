@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 // Controls component handles player actions during their turn with visual press feedback
-function Controls({ onHit, onStand, gameState, disabled = false }) {
+function Controls({ onHit, onStand, gameState, disabled = false, visible = true }) {
     const [hitPressed, setHitPressed] = useState(false);
     const [standPressed, setStandPressed] = useState(false);
 
@@ -26,7 +26,7 @@ function Controls({ onHit, onStand, gameState, disabled = false }) {
     }, [onHit, onStand, gameState, disabled]);
 
     return (
-        <div className="fixed bottom-12 right-12 flex flex-col space-y-2">
+        <div className={`fixed bottom-12 right-12 flex flex-col space-y-2 ${!visible ? 'hidden' : ''}`}>
             <button
                 onClick={() => {
                     setHitPressed(true);

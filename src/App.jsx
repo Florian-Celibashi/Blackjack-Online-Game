@@ -7,6 +7,7 @@ import Message from './components/Message'
 import Controls from './components/Controls'
 import Leaderboard from './components/Leaderboard'
 import Scoreboard from './components/Scoreboard'
+import Settings from './components/Settings'
 import { startGame, hit, dealerTurn } from './game/blackjackLogic'
 import { supabase } from './supabaseClient'
 
@@ -19,6 +20,10 @@ function App() {
   const [wins, setWins] = useState(0)
   const [losses, setLosses] = useState(0)
   const [streak, setStreak] = useState(0)
+  const [username, setUsername] = useState('')
+  const [scoreboardVisible, setScoreboardVisible] = useState(true)
+  const [controlsVisible, setControlsVisible] = useState(true)
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
   useEffect(() => {
     async function init() {
@@ -27,6 +32,7 @@ function App() {
       setWins(player.win_count ?? 0)
       setLosses(player.loss_count ?? 0)
       setStreak(player.streak ?? 0)
+      setUsername(player.username)
 
       const { deck, playerHand, dealerHand, result } = startGame();
       setDeck(deck);
@@ -49,6 +55,16 @@ function App() {
 
   function handleStand() {
     setGameState('dealer_turn');
+  }
+
+  const handleUsernameUpdated = (name) => {
+    setUsername(name)
+  }
+
+  const handleStatsResetState = () => {
+    setWins(0)
+    setLosses(0)
+    setStreak(0)
   }
 
   const startNewRound = () => {
@@ -113,12 +129,34 @@ function App() {
 
   return (
     <div className="App relative">
+      <button
+        className="fixed top-4 right-4 text-2xl"
+        onClick={() => setSettingsOpen(true)}
+      >
+        ⚙️
+      </button>
       <Leaderboard />
-      <Scoreboard wins={wins} losses={losses} streak={streak} />
+      {scoreboardVisible && (
+        <Scoreboard wins={wins} losses={losses} streak={streak} />
+      )}
       <Message gameState={gameState} />
       <PlayerHand hand={playerHand} />
-      <Controls onHit={handleHit} onStand={handleStand} gameState={gameState} />
+      {controlsVisible && (
+        <Controls onHit={handleHit} onStand={handleStand} gameState={gameState} />
+      )}
       <DealerHand hand={dealerHand} gameState={gameState} />
+      <Settings
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        playerId={playerId}
+        currentUsername={username}
+        onUsernameChange={handleUsernameUpdated}
+        scoreboardVisible={scoreboardVisible}
+        setScoreboardVisible={setScoreboardVisible}
+        controlsVisible={controlsVisible}
+        setControlsVisible={setControlsVisible}
+        onStatsReset={handleStatsResetState}
+      />
     </div>
   )
 }

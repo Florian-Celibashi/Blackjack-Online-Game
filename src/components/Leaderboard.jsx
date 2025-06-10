@@ -45,8 +45,8 @@ function Leaderboard() {
                 onClose={() => setIsOpen(false)}
                 title="Leaderboard"
             >
-                <div className="relative overflow-y-auto max-h-[60vh]">
-                    <table className="min-w-full text-left text-sm lg:text-base table-auto border-collapse">
+                <div className="relative overflow-y-auto max-h-[60vh] w-[60vw]">
+                    <table className="w-full text-left text-sm lg:text-base table-auto border-collapse">
                         <thead className="sticky top-0 z-10 bg-white text-black">
                             <tr>
                                 <th className="px-4 py-2 border border-[#4B5563] w-[40%]">Username</th>
@@ -71,7 +71,7 @@ function Leaderboard() {
                     </table>
                 </div>
             </Modal>
-        </div>
+        </div >
     );
 }
 

@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 // Controls component handles player actions during their turn with visual press feedback
-function Controls({ onHit, onStand, gameState }) {
+function Controls({ onHit, onStand, gameState, disabled = false }) {
     const [hitPressed, setHitPressed] = useState(false);
     const [standPressed, setStandPressed] = useState(false);
 
     useEffect(() => {
+        if (disabled) return;
+
         function handleKeyDown(event) {
             if (gameState !== 'player_turn') return;
 
@@ -21,7 +23,7 @@ function Controls({ onHit, onStand, gameState }) {
 
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [onHit, onStand, gameState]);
+    }, [onHit, onStand, gameState, disabled]);
 
     return (
         <div className="fixed bottom-12 right-12 flex flex-col space-y-2">

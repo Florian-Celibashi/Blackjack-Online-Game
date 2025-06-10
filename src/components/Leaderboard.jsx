@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
 import Modal from './Modal';
 import { supabase } from '../supabaseClient';
 
 function Leaderboard() {
     const [isOpen, setIsOpen] = useState(false);
     const [players, setPlayers] = useState([]);
+    const [sortColumn, setSortColumn] = useState('win_count');
+    const [sortAsc, setSortAsc] = useState(false);
 
     useEffect(() => {
         const fetchPlayers = async () => {
             const { data, error } = await supabase
                 .from('blackjack_players')
-                .select('username, win_count, loss_count, streak')
-                .order('win_count', { ascending: false });
+                .select('username, win_count, loss_count, streak');
 
             if (error) {
                 console.error('Error fetching leaderboard data:', error);
@@ -23,11 +25,29 @@ function Leaderboard() {
         if (isOpen) fetchPlayers();
     }, [isOpen]);
 
+    const sortedPlayers = [...players].sort((a, b) => {
+        if (sortColumn === 'username') {
+            return sortAsc
+                ? a.username.localeCompare(b.username)
+                : b.username.localeCompare(a.username);
+        }
+        return sortAsc ? a[sortColumn] - b[sortColumn] : b[sortColumn] - a[sortColumn];
+    });
+
+    const handleSort = (column) => {
+        if (sortColumn === column) {
+            setSortAsc((prev) => !prev);
+        } else {
+            setSortColumn(column);
+            setSortAsc(true);
+        }
+    };
+
     return (
         <div>
             <div className="fixed bottom-12 left-12 z-[9999]">
                 <button
-                    className="bg-red-800 hover:bg-red-900 text-white rounded-xl shadow-lg font-semibold transition-all border border-black 
+                    className="bg-red-800 hover:bg-red-900 text-white rounded-xl shadow-lg font-semibold transition-all border border-black
                     px-3 py-1
                     lg:px-4 lg:py-2
                     xl:px-5 xl:py-3
@@ -49,14 +69,62 @@ function Leaderboard() {
                     <table className="w-full text-left text-sm lg:text-base table-auto border-collapse">
                         <thead className="sticky top-0 z-10 bg-white text-black">
                             <tr>
-                                <th className="px-4 py-2 border border-[#4B5563] w-[40%]">Username</th>
-                                <th className="px-4 py-2 border border-[#4B5563] w-[20%]">Wins</th>
-                                <th className="px-4 py-2 border border-[#4B5563] w-[20%]">Losses</th>
-                                <th className="px-4 py-2 border border-[#4B5563] w-[20%]">Streak Record</th>
+                                <th
+                                    className="px-4 py-2 border border-[#4B5563] w-[40%] cursor-pointer select-none"
+                                    onClick={() => handleSort('username')}
+                                >
+                                    <div className="flex items-center space-x-1">
+                                        <span>Username</span>
+                                        {sortColumn === 'username' ? (
+                                            sortAsc ? <FaSortUp /> : <FaSortDown />
+                                        ) : (
+                                            <FaSort />
+                                        )}
+                                    </div>
+                                </th>
+                                <th
+                                    className="px-4 py-2 border border-[#4B5563] w-[20%] cursor-pointer select-none"
+                                    onClick={() => handleSort('win_count')}
+                                >
+                                    <div className="flex items-center space-x-1">
+                                        <span>Wins</span>
+                                        {sortColumn === 'win_count' ? (
+                                            sortAsc ? <FaSortUp /> : <FaSortDown />
+                                        ) : (
+                                            <FaSort />
+                                        )}
+                                    </div>
+                                </th>
+                                <th
+                                    className="px-4 py-2 border border-[#4B5563] w-[20%] cursor-pointer select-none"
+                                    onClick={() => handleSort('loss_count')}
+                                >
+                                    <div className="flex items-center space-x-1">
+                                        <span>Losses</span>
+                                        {sortColumn === 'loss_count' ? (
+                                            sortAsc ? <FaSortUp /> : <FaSortDown />
+                                        ) : (
+                                            <FaSort />
+                                        )}
+                                    </div>
+                                </th>
+                                <th
+                                    className="px-4 py-2 border border-[#4B5563] w-[20%] cursor-pointer select-none"
+                                    onClick={() => handleSort('streak')}
+                                >
+                                    <div className="flex items-center space-x-1">
+                                        <span>Streak Record</span>
+                                        {sortColumn === 'streak' ? (
+                                            sortAsc ? <FaSortUp /> : <FaSortDown />
+                                        ) : (
+                                            <FaSort />
+                                        )}
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {players.map((player, index) => (
+                            {sortedPlayers.map((player, index) => (
                                 <tr
                                     key={index}
                                     className="text-[#E5E7EB] even:bg-[#1a1a1a] odd:bg-[#111111] hover:bg-[#272727] transition"

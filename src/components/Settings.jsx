@@ -6,6 +6,7 @@ import { supabase } from '../supabaseClient'
 export default function Settings({
     playerId,
     onUsernameChange,
+    currentUsername,
     wins,
     losses,
     streak,
@@ -15,7 +16,8 @@ export default function Settings({
     showScoreboard,
     setShowScoreboard,
     showControls,
-    setShowControls
+    setShowControls,
+    onOpenChange = () => {}
 }) {
     const [open, setOpen] = useState(false)
     const [username, setUsername] = useState('')
@@ -45,14 +47,17 @@ export default function Settings({
     }, [statsError, statsSuccess]);
 
     useEffect(() => {
-        if (!open) {
+        if (open) {
+            setUsername(currentUsername)
+        } else {
             setUsername('')
             setUsernameError('')
             setUsernameSuccess('')
             setStatsError('')
             setStatsSuccess('')
         }
-    }, [open])
+        onOpenChange(open)
+    }, [open, currentUsername, onOpenChange])
 
     async function handleUsernameChange() {
         setUsernameError('')
@@ -137,12 +142,12 @@ export default function Settings({
                         </button>
                         <div className="mt-4 min-h-[1.8rem]">
                             <p
-                                className={`text-red-500 transition-opacity duration-10000 ${usernameError ? 'opacity-0' : 'opacity-100'}`}
+                                className={`text-red-500 ${usernameError ? 'fade-out' : 'opacity-0'}`}
                             >
                                 {usernameError}
                             </p>
                             <p
-                                className={`text-green-500 transition-opacity duration-10000 ${usernameSuccess ? 'opacity-0' : 'opacity-100'}`}
+                                className={`text-green-500 ${usernameSuccess ? 'fade-out' : 'opacity-0'}`}
                             >
                                 {usernameSuccess}
                             </p>
@@ -166,21 +171,21 @@ export default function Settings({
                             <span>Show Controls</span>
                         </div>
                     </div>
-                    <div className="space-y-2">
+                    <div className="flex items-center space-x-4">
                         <button
                             className="w-2/5 bg-red-800 hover:bg-red-900 text-white px-3 py-1 rounded"
                             onClick={handleResetStats}
                         >
                             Reset Stats
                         </button>
-                        <div className="min-h-[1.8rem]">
+                        <div className="min-h-[1.8rem] w-40">
                             <p
-                                className={`text-red-500 transition-opacity duration-10000 ${statsError ? 'opacity-0' : 'opacity-100'}`}
+                                className={`text-red-500 ${statsError ? 'fade-out' : 'opacity-0'}`}
                             >
                                 {statsError}
                             </p>
                             <p
-                                className={`text-green-500 transition-opacity duration-10000 ${statsSuccess ? 'opacity-0' : 'opacity-100'}`}
+                                className={`text-green-500 ${statsSuccess ? 'fade-out' : 'opacity-0'}`}
                             >
                                 {statsSuccess}
                             </p>
@@ -191,3 +196,4 @@ export default function Settings({
         </div>
     )
 }
+

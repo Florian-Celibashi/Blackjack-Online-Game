@@ -19,30 +19,54 @@ export default function Settings({
 }) {
     const [open, setOpen] = useState(false)
     const [username, setUsername] = useState('')
-    const [error, setError] = useState('')
-    const [success, setSuccess] = useState('')
+    const [usernameError, setUsernameError] = useState('')
+    const [usernameSuccess, setUsernameSuccess] = useState('')
+    const [statsError, setStatsError] = useState('')
+    const [statsSuccess, setStatsSuccess] = useState('')
+
+    useEffect(() => {
+        if (usernameError || usernameSuccess) {
+            const timeout = setTimeout(() => {
+                setUsernameError('');
+                setUsernameSuccess('');
+            }, 3000);
+            return () => clearTimeout(timeout);
+        }
+    }, [usernameError, usernameSuccess]);
+
+    useEffect(() => {
+        if (statsError || statsSuccess) {
+            const timeout = setTimeout(() => {
+                setStatsError('');
+                setStatsSuccess('');
+            }, 3000);
+            return () => clearTimeout(timeout);
+        }
+    }, [statsError, statsSuccess]);
 
     useEffect(() => {
         if (!open) {
             setUsername('')
-            setError('')
-            setSuccess('')
+            setUsernameError('')
+            setUsernameSuccess('')
+            setStatsError('')
+            setStatsSuccess('')
         }
     }, [open])
 
     async function handleUsernameChange() {
-        setError('')
-        setSuccess('')
+        setUsernameError('')
+        setUsernameSuccess('')
         const name = username.trim()
         if (name.length < 3 || name.length > 12) {
-            setError('Username must be between 3 and 12 characters.')
+            setUsernameError('Username must be between 3 and 12 characters.')
             return
         }
         try {
             const resp = await fetch(`https://www.purgomalum.com/service/containsprofanity?text=${encodeURIComponent(name)}`)
             const txt = await resp.text()
             if (txt === 'true') {
-                setError('Username contains profanity.')
+                setUsernameError('Username contains profanity.')
                 return
             }
         } catch (e) {
@@ -54,7 +78,7 @@ export default function Settings({
             .select('id')
             .ilike('username', name)
         if (data && data.some((p) => p.id !== playerId)) {
-            setError('Username already taken.')
+            setUsernameError('Username already taken.')
             return
         }
 
@@ -63,14 +87,16 @@ export default function Settings({
             .update({ username: name })
             .eq('id', playerId)
         if (updateError) {
-            setError('Failed to update username.')
+            setUsernameError('Failed to update username.')
         } else {
             onUsernameChange(name)
-            setSuccess('Username updated!')
+            setUsernameSuccess('Username updated!')
         }
     }
 
     async function handleResetStats() {
+        setStatsError('')
+        setStatsSuccess('')
         const { error: updateError } = await supabase
             .from('blackjack_players')
             .update({ win_count: 0, loss_count: 0, streak: 0 })
@@ -79,9 +105,9 @@ export default function Settings({
             setWins(0)
             setLosses(0)
             setStreak(0)
-            setSuccess('Stats reset!')
+            setStatsSuccess('Stats reset!')
         } else {
-            setError('Failed to reset stats.')
+            setStatsError('Failed to reset stats.')
         }
     }
 
@@ -95,45 +121,71 @@ export default function Settings({
                 <FaCog />
             </button>
             <Modal isOpen={open} onClose={() => setOpen(false)} title="Settings">
-                <div className="space-y-4 w-64 text-white">
+                <div className="space-y-6 h-[40vh] w-[40vw] max-w-xl text-white">
                     <div>
-                        <label className="block mb-1 text-lg">Change Username</label>
+                        <label className="block mb-2 text-lg">Username</label>
                         <input
-                            className="w-full text-black px-2 py-1 rounded"
+                            className="w-3/5 text-black bg-gray-200 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                         />
                         <button
-                            className="mt-2 bg-blue-700 hover:bg-blue-800 text-white px-3 py-1 rounded"
+                            className="mt-2 ml-5 w-1/5 bg-blue-800 hover:bg-blue-900 text-white px-3 py-1 rounded"
                             onClick={handleUsernameChange}
                         >
                             Update
                         </button>
+                        <div className="mt-4 min-h-[1.8rem]">
+                            <p
+                                className={`text-red-500 transition-opacity duration-10000 ${usernameError ? 'opacity-0' : 'opacity-100'}`}
+                            >
+                                {usernameError}
+                            </p>
+                            <p
+                                className={`text-green-500 transition-opacity duration-10000 ${usernameSuccess ? 'opacity-0' : 'opacity-100'}`}
+                            >
+                                {usernameSuccess}
+                            </p>
+                        </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                        <input
-                            type="checkbox"
-                            checked={showScoreboard}
-                            onChange={(e) => setShowScoreboard(e.target.checked)}
-                        />
-                        <span>Show Scoreboard</span>
+                    <div className="flex space-x-16">
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                checked={showScoreboard}
+                                onChange={(e) => setShowScoreboard(e.target.checked)}
+                            />
+                            <span>Show Scoreboard</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                checked={showControls}
+                                onChange={(e) => setShowControls(e.target.checked)}
+                            />
+                            <span>Show Controls</span>
+                        </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                        <input
-                            type="checkbox"
-                            checked={showControls}
-                            onChange={(e) => setShowControls(e.target.checked)}
-                        />
-                        <span>Show Controls</span>
+                    <div className="space-y-2">
+                        <button
+                            className="w-2/5 bg-red-800 hover:bg-red-900 text-white px-3 py-1 rounded"
+                            onClick={handleResetStats}
+                        >
+                            Reset Stats
+                        </button>
+                        <div className="min-h-[1.8rem]">
+                            <p
+                                className={`text-red-500 transition-opacity duration-10000 ${statsError ? 'opacity-0' : 'opacity-100'}`}
+                            >
+                                {statsError}
+                            </p>
+                            <p
+                                className={`text-green-500 transition-opacity duration-10000 ${statsSuccess ? 'opacity-0' : 'opacity-100'}`}
+                            >
+                                {statsSuccess}
+                            </p>
+                        </div>
                     </div>
-                    <button
-                        className="bg-red-700 hover:bg-red-800 text-white px-3 py-1 rounded"
-                        onClick={handleResetStats}
-                    >
-                        Reset Stats
-                    </button>
-                    {error && <p className="text-red-500">{error}</p>}
-                    {success && <p className="text-green-500">{success}</p>}
                 </div>
             </Modal>
         </div>

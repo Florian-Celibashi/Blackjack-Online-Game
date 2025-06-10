@@ -20,7 +20,7 @@ function Message({ gameState, username }) {
 
     return (
         <div className="game-message flex justify-center items-center fixed inset-0">
-            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-semibold">{message}</p>
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-semibold p-3 lg:p-4 xl:p-6 bg-black/30 rounded-xl">{message}</p>
         </div>
     )
 }

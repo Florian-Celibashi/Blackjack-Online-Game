@@ -45,14 +45,14 @@ function Leaderboard() {
                 onClose={() => setIsOpen(false)}
                 title="Leaderboard"
             >
-                <div className="overflow-y-auto max-h-[60vh]">
+                <div className="relative overflow-y-auto max-h-[60vh]">
                     <table className="min-w-full text-left text-sm lg:text-base table-auto border-collapse">
-                        <thead>
-                            <tr className="bg-white text-black">
+                        <thead className="sticky top-0 z-10 bg-white text-black">
+                            <tr>
                                 <th className="px-4 py-2 border border-[#4B5563] w-[40%]">Username</th>
                                 <th className="px-4 py-2 border border-[#4B5563] w-[20%]">Wins</th>
                                 <th className="px-4 py-2 border border-[#4B5563] w-[20%]">Losses</th>
-                                <th className="px-4 py-2 border border-[#4B5563] w-[20%]">Streak</th>
+                                <th className="px-4 py-2 border border-[#4B5563] w-[20%]">Streak Record</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { getOrCreatePlayer } from './playerManager'
 import DealerHand from './components/DealerHand'
@@ -9,6 +9,7 @@ import Leaderboard from './components/Leaderboard'
 import Scoreboard from './components/Scoreboard'
 import { startGame, hit, dealerTurn } from './game/blackjackLogic'
 import { supabase } from './supabaseClient'
+import Settings from './components/Settings';
 
 function App() {
   const [playerId, setPlayerId] = useState(null)
@@ -19,6 +20,7 @@ function App() {
   const [wins, setWins] = useState(0)
   const [losses, setLosses] = useState(0)
   const [streak, setStreak] = useState(0)
+  const prevGameState = useRef(null)
 
   useEffect(() => {
     async function init() {
@@ -82,6 +84,9 @@ function App() {
   useEffect(() => {
     async function updateStats() {
       if (!playerId) return;
+      if (prevGameState.current === gameState) return;
+
+      prevGameState.current = gameState;
 
       if (['player_busts', 'dealer_wins'].includes(gameState)) {
         const newLosses = losses + 1;
@@ -113,6 +118,7 @@ function App() {
 
   return (
     <div className="App relative">
+      <Settings />
       <Leaderboard />
       <Scoreboard wins={wins} losses={losses} streak={streak} />
       <Message gameState={gameState} />

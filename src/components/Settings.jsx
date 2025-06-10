@@ -130,7 +130,7 @@ export default function Settings({
                 <FaCog />
             </button>
             <Modal isOpen={open} onClose={() => setOpen(false)} title="Settings">
-                <div className="space-y-6 h-[35vh] w-[35vw] max-w-xl text-white">
+                <div className="space-y-6 h-[45vh] w-[45vw] max-w-xl text-white">
                     <div>
                         <label className="block mb-2 text-lg">Username</label>
                         <input
@@ -184,7 +184,7 @@ export default function Settings({
                             />
                             <span>Ambiance Music</span>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 ml-2.5">
                             <input
                                 type="checkbox"
                                 checked={playSfx}

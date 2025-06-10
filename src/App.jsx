@@ -12,6 +12,8 @@ import Settings from './components/Settings'
 import { startGame, hit, dealerTurn } from './game/blackjackLogic'
 import { supabase } from './supabaseClient'
 
+const GAME_STATE_KEY = 'blackjack_game_state'
+
 function App() {
   const [playerId, setPlayerId] = useState(null)
   const [playerHand, setPlayerHand] = useState([])
@@ -41,11 +43,25 @@ function App() {
         setAutoOpenTutorial(true)
       }
 
-      const { deck, playerHand, dealerHand, result } = startGame();
-      setDeck(deck);
-      setPlayerHand(playerHand);
-      setDealerHand(dealerHand);
-      setGameState(result ?? 'player_turn');
+      const saved = localStorage.getItem(GAME_STATE_KEY)
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved)
+          setDeck(parsed.deck || [])
+          setPlayerHand(parsed.playerHand || [])
+          setDealerHand(parsed.dealerHand || [])
+          setGameState(parsed.gameState || 'player_turn')
+          return
+        } catch {
+          // ignore invalid saved state
+        }
+      }
+
+      const { deck, playerHand, dealerHand, result } = startGame()
+      setDeck(deck)
+      setPlayerHand(playerHand)
+      setDealerHand(dealerHand)
+      setGameState(result ?? 'player_turn')
     }
     init()
   }, [])
@@ -137,6 +153,17 @@ function App() {
     updateStats();
   }, [gameState, playerId, losses, wins, currentStreak, streak]);
 
+  useEffect(() => {
+    if (!deck.length) return
+    const state = {
+      deck,
+      playerHand,
+      dealerHand,
+      gameState,
+    }
+    localStorage.setItem(GAME_STATE_KEY, JSON.stringify(state))
+  }, [deck, playerHand, dealerHand, gameState])
+
   return (
     <div className="App relative">
       <Tutorial initialOpen={autoOpenTutorial} />
@@ -146,14 +173,13 @@ function App() {
       )}
       <Message gameState={gameState} />
       <PlayerHand hand={playerHand} />
-      {showControls && (
-        <Controls
-          onHit={handleHit}
-          onStand={handleStand}
-          gameState={gameState}
-          disabled={settingsOpen}
-        />
-      )}
+      <Controls
+        onHit={handleHit}
+        onStand={handleStand}
+        gameState={gameState}
+        disabled={settingsOpen}
+        hidden={!showControls}
+      />
       <DealerHand hand={dealerHand} gameState={gameState} />
       <Settings
         playerId={playerId}

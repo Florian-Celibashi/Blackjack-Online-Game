@@ -7,9 +7,6 @@ export default function Settings({
     playerId,
     onUsernameChange,
     currentUsername,
-    wins,
-    losses,
-    streak,
     setWins,
     setLosses,
     setStreak,
@@ -78,7 +75,7 @@ export default function Settings({
                 setUsernameError('Username contains profanity.')
                 return
             }
-        } catch (e) {
+        } catch {
             // ignore network errors, treat as pass
         }
 

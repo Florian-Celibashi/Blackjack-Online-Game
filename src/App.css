@@ -59,3 +59,33 @@ body {
 .fade-out {
   animation: fadeOut 3s forwards;
 }
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.dealer-card-enter {
+  animation: slideInDown 0.3s ease-out;
+}
+
+.player-card-enter {
+  animation: slideInUp 0.3s ease-out;
+}

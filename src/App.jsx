@@ -132,16 +132,34 @@ function App() {
 
   useEffect(() => {
     if (gameState === 'dealer_turn') {
-      const { deck: newDeck, dealerHand: newDealerHand, result } = dealerTurn(deck, dealerHand, playerHand)
-      const draws = newDealerHand.length - dealerHand.length
-      setDeck(newDeck)
-      setDealerHand(newDealerHand)
-      setGameState(result)
-      for (let i = 0; i < draws; i += 1) {
-        playCardSound()
+      const { deck: newDeck, dealerHand: newDealerHand, result } = dealerTurn(
+        deck,
+        dealerHand,
+        playerHand,
+      )
+
+      const draws = newDealerHand.slice(dealerHand.length)
+
+      if (draws.length === 0) {
+        setDeck(newDeck)
+        setGameState(result)
+        return
       }
+
+      draws.forEach((card, i) => {
+        setTimeout(() => {
+          setDealerHand(prev => [...prev, card])
+          playCardSound()
+
+          if (i === draws.length - 1) {
+            setDeck(newDeck)
+            setGameState(result)
+          }
+        }, (i + 1) * 800)
+      })
     }
-  }, [gameState, deck, dealerHand, playerHand, playSfx]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameState])
 
   useEffect(() => {
     async function updateStats() {

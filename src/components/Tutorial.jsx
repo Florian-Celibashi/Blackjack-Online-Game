@@ -1,8 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from './Modal';
 
-function Tutorial() {
-    const [isOpen, setIsOpen] = useState(false);
+function Tutorial({ initialOpen = false }) {
+    const [isOpen, setIsOpen] = useState(initialOpen);
+
+    useEffect(() => {
+        if (initialOpen) {
+            setIsOpen(true);
+        }
+    }, [initialOpen]);
 
     return (
         <div>

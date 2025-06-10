@@ -21,6 +21,8 @@ function App() {
   const [wins, setWins] = useState(0)
   const [losses, setLosses] = useState(0)
   const [streak, setStreak] = useState(0)
+  const [currentStreak, setCurrentStreak] = useState(0)
+  const [autoOpenTutorial, setAutoOpenTutorial] = useState(false)
   const [username, setUsername] = useState('')
   const [showScoreboard, setShowScoreboard] = useState(true)
   const [showControls, setShowControls] = useState(true)
@@ -29,12 +31,15 @@ function App() {
 
   useEffect(() => {
     async function init() {
-      const player = await getOrCreatePlayer()
+      const { player, isNew } = await getOrCreatePlayer()
       setPlayerId(player.id)
       setWins(player.win_count ?? 0)
       setLosses(player.loss_count ?? 0)
       setStreak(player.streak ?? 0)
       setUsername(player.username ?? '')
+      if (isNew) {
+        setAutoOpenTutorial(true)
+      }
 
       const { deck, playerHand, dealerHand, result } = startGame();
       setDeck(deck);
@@ -105,26 +110,36 @@ function App() {
         if (!error && data) {
           setLosses(data.loss_count);
         }
+        setCurrentStreak(0);
       } else if (['player_wins', 'dealer_busts'].includes(gameState)) {
         const newWins = wins + 1;
+        const newStreakCount = currentStreak + 1;
+        const updates = { win_count: newWins };
+        if (newStreakCount > streak) {
+          updates.streak = newStreakCount;
+        }
         const { data, error } = await supabase
           .from('blackjack_players')
-          .update({ win_count: newWins })
+          .update(updates)
           .eq('id', playerId)
-          .select('win_count')
+          .select('win_count, streak')
           .single();
         if (!error && data) {
           setWins(data.win_count);
+          if (data.streak !== undefined) {
+            setStreak(data.streak);
+          }
         }
+        setCurrentStreak(newStreakCount);
       }
     }
 
     updateStats();
-  }, [gameState, playerId, losses, wins]);
+  }, [gameState, playerId, losses, wins, currentStreak, streak]);
 
   return (
     <div className="App relative">
-      <Tutorial />
+      <Tutorial initialOpen={autoOpenTutorial} />
       <Leaderboard />
       {showScoreboard && (
         <Scoreboard wins={wins} losses={losses} streak={streak} />

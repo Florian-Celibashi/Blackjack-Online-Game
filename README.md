@@ -1,7 +1,3 @@
-Blackjack is now live! 🎉🥳
-
-Try to beat my winning streak 👉 [florians-blackjack.vercel.app](https://florians-blackjack.vercel.app)
-
 # 🃏 Blackjack — Now Live! 🎉
 
 A clean, modern, and intuitive online Blackjack game built with the latest web technologies.

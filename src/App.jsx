@@ -9,7 +9,8 @@ import Leaderboard from './components/Leaderboard'
 import Scoreboard from './components/Scoreboard'
 import Tutorial from './components/Tutorial'
 import Settings from './components/Settings'
-import { startGame, hit, dealerTurn } from './game/blackjackLogic'
+import { startGame, hit } from './game/blackjackLogic'
+import { calculateHandValue } from './game/blackjackScoring'
 import { supabase } from './supabaseClient'
 
 const GAME_STATE_KEY = 'blackjack_game_state'
@@ -28,8 +29,35 @@ function App() {
   const [username, setUsername] = useState('')
   const [showScoreboard, setShowScoreboard] = useState(true)
   const [showControls, setShowControls] = useState(true)
+  const [musicEnabled, setMusicEnabled] = useState(true)
+  const [soundEnabled, setSoundEnabled] = useState(true)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const prevGameState = useRef(null)
+  const ambianceRef = useRef(null)
+  const cardDrawRef = useRef(null)
+
+  useEffect(() => {
+    ambianceRef.current = new Audio('/audio/casino_ambiance.wav')
+    ambianceRef.current.loop = true
+    cardDrawRef.current = new Audio('/audio/card_draw.mp3')
+  }, [])
+
+  useEffect(() => {
+    const audio = ambianceRef.current
+    if (!audio) return
+    if (musicEnabled) {
+      audio.play().catch(() => {})
+    } else {
+      audio.pause()
+    }
+  }, [musicEnabled])
+
+  const playCardSound = () => {
+    if (soundEnabled && cardDrawRef.current) {
+      cardDrawRef.current.currentTime = 0
+      cardDrawRef.current.play().catch(() => {})
+    }
+  }
 
   useEffect(() => {
     async function init() {
@@ -62,6 +90,12 @@ function App() {
       setPlayerHand(playerHand)
       setDealerHand(dealerHand)
       setGameState(result ?? 'player_turn')
+      if (soundEnabled) {
+        const total = playerHand.length + dealerHand.length
+        for (let i = 0; i < total; i++) {
+          setTimeout(playCardSound, i * 150)
+        }
+      }
     }
     init()
   }, [])
@@ -70,6 +104,7 @@ function App() {
     const { deck: newDeck, playerHand: newPlayerHand, result } = hit(deck, playerHand);
     setDeck(newDeck);
     setPlayerHand(newPlayerHand);
+    playCardSound();
 
     if (result) {
       setGameState(result);
@@ -86,6 +121,12 @@ function App() {
     setPlayerHand(playerHand);
     setDealerHand(dealerHand);
     setGameState(result ?? 'player_turn');
+    if (soundEnabled) {
+      const total = playerHand.length + dealerHand.length;
+      for (let i = 0; i < total; i++) {
+        setTimeout(playCardSound, i * 150);
+      }
+    }
   };
 
   useEffect(() => {
@@ -100,13 +141,36 @@ function App() {
   }, [gameState]);
 
   useEffect(() => {
-    if (gameState === 'dealer_turn') {
-      const { deck: newDeck, dealerHand: newDealerHand, result } = dealerTurn(deck, dealerHand, playerHand);
-      setDeck(newDeck);
-      setDealerHand(newDealerHand);
-      setGameState(result);
+    async function runDealerTurn() {
+      let deckCopy = [...deck]
+      let dealerHandCopy = [...dealerHand]
+      while (calculateHandValue(dealerHandCopy) < 17) {
+        const newCard = deckCopy.pop()
+        dealerHandCopy.push(newCard)
+        setDeck([...deckCopy])
+        setDealerHand([...dealerHandCopy])
+        playCardSound()
+        await new Promise((r) => setTimeout(r, 600))
+      }
+      const dealerValue = calculateHandValue(dealerHandCopy)
+      const playerValue = calculateHandValue(playerHand)
+      let result = ''
+      if (dealerValue > 21) {
+        result = 'dealer_busts'
+      } else if (dealerValue > playerValue) {
+        result = 'dealer_wins'
+      } else if (dealerValue < playerValue) {
+        result = 'player_wins'
+      } else {
+        result = 'tie'
+      }
+      setGameState(result)
     }
-  }, [gameState, deck, dealerHand, playerHand]);
+
+    if (gameState === 'dealer_turn') {
+      runDealerTurn()
+    }
+  }, [gameState])
 
   useEffect(() => {
     async function updateStats() {
@@ -195,6 +259,10 @@ function App() {
         setShowScoreboard={setShowScoreboard}
         showControls={showControls}
         setShowControls={setShowControls}
+        musicEnabled={musicEnabled}
+        setMusicEnabled={setMusicEnabled}
+        soundEnabled={soundEnabled}
+        setSoundEnabled={setSoundEnabled}
         onOpenChange={setSettingsOpen}
       />
     </div>

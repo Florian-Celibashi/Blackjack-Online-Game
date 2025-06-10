@@ -9,7 +9,7 @@ function PlayerHand({ hand }) {
                     const filename = `${card.rank}_of_${card.suit}.svg`
                     const imagePath = `/assets/svg-cards/${filename}`
                     return (
-                        <div key={index} className="card">
+                        <div key={index} className="card card-drawn">
                             <img src={imagePath} alt={`${card.rank} of ${card.suit}`} className="w-20 lg:w-30 xl:w-40 2xl:w-50 h-auto" />
                         </div>
                     )

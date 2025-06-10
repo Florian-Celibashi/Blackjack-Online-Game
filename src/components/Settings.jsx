@@ -17,6 +17,10 @@ export default function Settings({
     setShowScoreboard,
     showControls,
     setShowControls,
+    musicEnabled,
+    setMusicEnabled,
+    soundEnabled,
+    setSoundEnabled,
     onOpenChange = () => { }
 }) {
     const [open, setOpen] = useState(false)
@@ -169,6 +173,22 @@ export default function Settings({
                                 onChange={(e) => setShowControls(e.target.checked)}
                             />
                             <span>Show Controls</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                checked={musicEnabled}
+                                onChange={(e) => setMusicEnabled(e.target.checked)}
+                            />
+                            <span>Music</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                checked={soundEnabled}
+                                onChange={(e) => setSoundEnabled(e.target.checked)}
+                            />
+                            <span>Sound Effects</span>
                         </div>
                     </div>
                     <div className="flex items-center space-x-4">

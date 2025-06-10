@@ -59,3 +59,18 @@ body {
 .fade-out {
   animation: fadeOut 3s forwards;
 }
+
+@keyframes drawCard {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.card-drawn {
+  animation: drawCard 0.3s ease-out;
+}

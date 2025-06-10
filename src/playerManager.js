@@ -8,7 +8,6 @@ export async function getOrCreatePlayer() {
     if (playerId) {
         console.log('Player found in local storage:', playerId)
 
-        // Fetch full player info from Supabase
         const { data, error } = await supabase
             .from('blackjack_players')
             .select()
@@ -21,7 +20,7 @@ export async function getOrCreatePlayer() {
         }
 
         console.log('Loaded player data:', data)
-        return data
+        return { player: data, isNew: false }
     }
 
     const username = 'Player_' + Math.floor(Math.random() * 100000)
@@ -40,5 +39,5 @@ export async function getOrCreatePlayer() {
     localStorage.setItem(LOCAL_STORAGE_KEY, player.id)
     console.log('New player created:', player)
 
-    return player
+    return { player, isNew: true }
 }

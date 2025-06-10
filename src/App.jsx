@@ -7,6 +7,7 @@ import Message from './components/Message'
 import Controls from './components/Controls'
 import Leaderboard from './components/Leaderboard'
 import Scoreboard from './components/Scoreboard'
+import Tutorial from './components/Tutorial'
 import { startGame, hit, dealerTurn } from './game/blackjackLogic'
 import { supabase } from './supabaseClient'
 
@@ -113,6 +114,7 @@ function App() {
 
   return (
     <div className="App relative">
+      <Tutorial />
       <Leaderboard />
       <Scoreboard wins={wins} losses={losses} streak={streak} />
       <Message gameState={gameState} />

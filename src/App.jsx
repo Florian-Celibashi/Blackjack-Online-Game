@@ -6,7 +6,9 @@ import PlayerHand from './components/PlayerHand'
 import Message from './components/Message'
 import Controls from './components/Controls'
 import Leaderboard from './components/Leaderboard'
+import Scoreboard from './components/Scoreboard'
 import { startGame, hit, dealerTurn } from './game/blackjackLogic'
+import { supabase } from './supabaseClient'
 
 function App() {
   const [playerId, setPlayerId] = useState(null)
@@ -14,11 +16,17 @@ function App() {
   const [dealerHand, setDealerHand] = useState([])
   const [gameState, setGameState] = useState('player_turn')
   const [deck, setDeck] = useState([])
+  const [wins, setWins] = useState(0)
+  const [losses, setLosses] = useState(0)
+  const [streak, setStreak] = useState(0)
 
   useEffect(() => {
     async function init() {
       const player = await getOrCreatePlayer()
       setPlayerId(player.id)
+      setWins(player.win_count ?? 0)
+      setLosses(player.loss_count ?? 0)
+      setStreak(player.streak ?? 0)
 
       const { deck, playerHand, dealerHand, result } = startGame();
       setDeck(deck);
@@ -71,9 +79,42 @@ function App() {
     }
   }, [gameState, deck, dealerHand, playerHand]);
 
+  useEffect(() => {
+    async function updateStats() {
+      if (!playerId) return;
+
+      if (['player_busts', 'dealer_wins'].includes(gameState)) {
+        const newLosses = losses + 1;
+        const { data, error } = await supabase
+          .from('blackjack_players')
+          .update({ loss_count: newLosses })
+          .eq('id', playerId)
+          .select('loss_count')
+          .single();
+        if (!error && data) {
+          setLosses(data.loss_count);
+        }
+      } else if (['player_wins', 'dealer_busts'].includes(gameState)) {
+        const newWins = wins + 1;
+        const { data, error } = await supabase
+          .from('blackjack_players')
+          .update({ win_count: newWins })
+          .eq('id', playerId)
+          .select('win_count')
+          .single();
+        if (!error && data) {
+          setWins(data.win_count);
+        }
+      }
+    }
+
+    updateStats();
+  }, [gameState, playerId, losses, wins]);
+
   return (
     <div className="App relative">
       <Leaderboard />
+      <Scoreboard wins={wins} losses={losses} streak={streak} />
       <Message gameState={gameState} />
       <PlayerHand hand={playerHand} />
       <Controls onHit={handleHit} onStand={handleStand} gameState={gameState} />

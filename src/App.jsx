@@ -8,6 +8,7 @@ import Controls from './components/Controls'
 import Leaderboard from './components/Leaderboard'
 import Scoreboard from './components/Scoreboard'
 import Tutorial from './components/Tutorial'
+import Settings from './components/Settings'
 import { startGame, hit, dealerTurn } from './game/blackjackLogic'
 import { supabase } from './supabaseClient'
 
@@ -20,6 +21,9 @@ function App() {
   const [wins, setWins] = useState(0)
   const [losses, setLosses] = useState(0)
   const [streak, setStreak] = useState(0)
+  const [username, setUsername] = useState('')
+  const [showScoreboard, setShowScoreboard] = useState(true)
+  const [showControls, setShowControls] = useState(true)
   const prevGameState = useRef(null)
 
   useEffect(() => {
@@ -29,6 +33,7 @@ function App() {
       setWins(player.win_count ?? 0)
       setLosses(player.loss_count ?? 0)
       setStreak(player.streak ?? 0)
+      setUsername(player.username ?? '')
 
       const { deck, playerHand, dealerHand, result } = startGame();
       setDeck(deck);
@@ -120,11 +125,29 @@ function App() {
     <div className="App relative">
       <Tutorial />
       <Leaderboard />
-      <Scoreboard wins={wins} losses={losses} streak={streak} />
+      {showScoreboard && (
+        <Scoreboard wins={wins} losses={losses} streak={streak} />
+      )}
       <Message gameState={gameState} />
       <PlayerHand hand={playerHand} />
-      <Controls onHit={handleHit} onStand={handleStand} gameState={gameState} />
+      {showControls && (
+        <Controls onHit={handleHit} onStand={handleStand} gameState={gameState} />
+      )}
       <DealerHand hand={dealerHand} gameState={gameState} />
+      <Settings
+        playerId={playerId}
+        onUsernameChange={setUsername}
+        wins={wins}
+        losses={losses}
+        streak={streak}
+        setWins={setWins}
+        setLosses={setLosses}
+        setStreak={setStreak}
+        showScoreboard={showScoreboard}
+        setShowScoreboard={setShowScoreboard}
+        showControls={showControls}
+        setShowControls={setShowControls}
+      />
     </div>
   )
 }

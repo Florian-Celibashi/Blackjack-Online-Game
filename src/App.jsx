@@ -24,6 +24,7 @@ function App() {
   const [username, setUsername] = useState('')
   const [showScoreboard, setShowScoreboard] = useState(true)
   const [showControls, setShowControls] = useState(true)
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const prevGameState = useRef(null)
 
   useEffect(() => {
@@ -131,12 +132,18 @@ function App() {
       <Message gameState={gameState} />
       <PlayerHand hand={playerHand} />
       {showControls && (
-        <Controls onHit={handleHit} onStand={handleStand} gameState={gameState} />
+        <Controls
+          onHit={handleHit}
+          onStand={handleStand}
+          gameState={gameState}
+          disabled={settingsOpen}
+        />
       )}
       <DealerHand hand={dealerHand} gameState={gameState} />
       <Settings
         playerId={playerId}
         onUsernameChange={setUsername}
+        currentUsername={username}
         wins={wins}
         losses={losses}
         streak={streak}
@@ -147,9 +154,11 @@ function App() {
         setShowScoreboard={setShowScoreboard}
         showControls={showControls}
         setShowControls={setShowControls}
+        onOpenChange={setSettingsOpen}
       />
     </div>
   )
 }
 
 export default App
+

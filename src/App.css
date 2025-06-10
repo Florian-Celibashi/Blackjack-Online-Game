@@ -46,3 +46,16 @@
 body {
   @apply text-white text-lg leading-relaxed antialiased;
 }
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-out {
+  animation: fadeOut 3s forwards;
+}

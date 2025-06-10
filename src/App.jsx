@@ -9,7 +9,6 @@ import Leaderboard from './components/Leaderboard'
 import Scoreboard from './components/Scoreboard'
 import { startGame, hit, dealerTurn } from './game/blackjackLogic'
 import { supabase } from './supabaseClient'
-import Settings from './components/Settings';
 
 function App() {
   const [playerId, setPlayerId] = useState(null)
@@ -118,7 +117,6 @@ function App() {
 
   return (
     <div className="App relative">
-      <Settings />
       <Leaderboard />
       <Scoreboard wins={wins} losses={losses} streak={streak} />
       <Message gameState={gameState} />

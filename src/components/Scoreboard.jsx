@@ -8,7 +8,7 @@ function Scoreboard({ wins, losses, streak }) {
         >
             <p>Wins: {wins}</p>
             <p>Losses: {losses}</p>
-            <p>Streak: {streak}</p>
+            <p>Streak Record: {streak}</p>
         </div>
     )
 }

@@ -155,7 +155,7 @@ function App() {
             setDeck(newDeck)
             setGameState(result)
           }
-        }, (i + 1) * 800)
+        }, (i + 1) * 1200)
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

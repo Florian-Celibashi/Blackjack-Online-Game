@@ -17,7 +17,7 @@ export default function Settings({
     setShowScoreboard,
     showControls,
     setShowControls,
-    onOpenChange = () => {}
+    onOpenChange = () => { }
 }) {
     const [open, setOpen] = useState(false)
     const [username, setUsername] = useState('')
@@ -119,14 +119,14 @@ export default function Settings({
     return (
         <div>
             <button
-                className="fixed top-12 right-12 text-white text-3xl z-[9999]"
+                className="fixed top-6 right-6 text-gray-500 hover:text-gray-600 text-3xl md:text-4xl lg:text-5xl xl:text-6xl z-[9999] hover:scale-110 transition-transform"
                 onClick={() => setOpen(true)}
                 aria-label="Settings"
             >
                 <FaCog />
             </button>
             <Modal isOpen={open} onClose={() => setOpen(false)} title="Settings">
-                <div className="space-y-6 h-[40vh] w-[40vw] max-w-xl text-white">
+                <div className="space-y-6 h-[35vh] w-[35vw] max-w-xl text-white">
                     <div>
                         <label className="block mb-2 text-lg">Username</label>
                         <input

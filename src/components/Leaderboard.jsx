@@ -53,7 +53,7 @@ function Leaderboard() {
                     xl:px-5 xl:py-3
                     2xl:px-6 2xl:py-4
                     text-md md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl
-                    active:scale-110 transition-transform"
+                    hover:scale-110 transition-transform"
                     onClick={() => setIsOpen(true)}
                 >
                     Leaderboard

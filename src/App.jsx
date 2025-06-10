@@ -28,8 +28,38 @@ function App() {
   const [username, setUsername] = useState('')
   const [showScoreboard, setShowScoreboard] = useState(true)
   const [showControls, setShowControls] = useState(true)
+  const [playAmbiance, setPlayAmbiance] = useState(true)
+  const [playSfx, setPlaySfx] = useState(true)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const prevGameState = useRef(null)
+  const ambianceRef = useRef(null)
+
+  useEffect(() => {
+    ambianceRef.current = new Audio('/audio/casino_ambiance.wav')
+    ambianceRef.current.loop = true
+    if (playAmbiance) {
+      ambianceRef.current.play()
+    }
+    return () => {
+      ambianceRef.current.pause()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!ambianceRef.current) return
+    if (playAmbiance) {
+      ambianceRef.current.play()
+    } else {
+      ambianceRef.current.pause()
+    }
+  }, [playAmbiance])
+
+  const playCardSound = () => {
+    if (playSfx) {
+      const sfx = new Audio('/audio/card_draw.mp3')
+      sfx.play()
+    }
+  }
 
   useEffect(() => {
     async function init() {
@@ -70,6 +100,7 @@ function App() {
     const { deck: newDeck, playerHand: newPlayerHand, result } = hit(deck, playerHand);
     setDeck(newDeck);
     setPlayerHand(newPlayerHand);
+    playCardSound()
 
     if (result) {
       setGameState(result);
@@ -101,12 +132,16 @@ function App() {
 
   useEffect(() => {
     if (gameState === 'dealer_turn') {
-      const { deck: newDeck, dealerHand: newDealerHand, result } = dealerTurn(deck, dealerHand, playerHand);
-      setDeck(newDeck);
-      setDealerHand(newDealerHand);
-      setGameState(result);
+      const { deck: newDeck, dealerHand: newDealerHand, result } = dealerTurn(deck, dealerHand, playerHand)
+      const draws = newDealerHand.length - dealerHand.length
+      setDeck(newDeck)
+      setDealerHand(newDealerHand)
+      setGameState(result)
+      for (let i = 0; i < draws; i += 1) {
+        playCardSound()
+      }
     }
-  }, [gameState, deck, dealerHand, playerHand]);
+  }, [gameState, deck, dealerHand, playerHand, playSfx]);
 
   useEffect(() => {
     async function updateStats() {
@@ -195,6 +230,10 @@ function App() {
         setShowScoreboard={setShowScoreboard}
         showControls={showControls}
         setShowControls={setShowControls}
+        playAmbiance={playAmbiance}
+        setPlayAmbiance={setPlayAmbiance}
+        playSfx={playSfx}
+        setPlaySfx={setPlaySfx}
         onOpenChange={setSettingsOpen}
       />
     </div>

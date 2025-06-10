@@ -17,6 +17,10 @@ export default function Settings({
     setShowScoreboard,
     showControls,
     setShowControls,
+    playAmbiance,
+    setPlayAmbiance,
+    playSfx,
+    setPlaySfx,
     onOpenChange = () => { }
 }) {
     const [open, setOpen] = useState(false)
@@ -169,6 +173,24 @@ export default function Settings({
                                 onChange={(e) => setShowControls(e.target.checked)}
                             />
                             <span>Show Controls</span>
+                        </div>
+                    </div>
+                    <div className="flex space-x-16">
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                checked={playAmbiance}
+                                onChange={(e) => setPlayAmbiance(e.target.checked)}
+                            />
+                            <span>Ambiance Music</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                checked={playSfx}
+                                onChange={(e) => setPlaySfx(e.target.checked)}
+                            />
+                            <span>Sound Effects</span>
                         </div>
                     </div>
                     <div className="flex items-center space-x-4">

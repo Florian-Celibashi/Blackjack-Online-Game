@@ -14,8 +14,11 @@ function Message({ gameState, username }) {
     } else if (gameState === 'dealer_busts') {
         message = 'Dealer busts! Press space to play again.'
     }
-    else if (gameState === 'multiplayerWin' && username) {
-        message = `${username} wins!`
+    // else if (gameState === 'multiplayerWin' && username) {
+    //     message = `${username} wins!`
+    // }
+    else if (gameState === 'dealer_turn') {
+        message = "Dealer's turn."
     }
 
     return (

@@ -1,11 +1,11 @@
-# 🃏 Blackjack — Now Live! 🎉
+# 🃏 Blackjack Online Web Browser Game 🎉
 
 A clean, modern, responsive and intuitive online Blackjack game built with the latest web technologies.
 
 Optimized for desktops, laptops of all sizes, and iPads with a connected hardware keyboard.
 
 **Try it here:**  
-👉 [florians-blackjack.vercel.app](https://florians-blackjack.vercel.app)
+👉 https://florians-blackjack.vercel.app
 
 ### 🛠 Built With
 

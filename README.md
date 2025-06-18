@@ -1,4 +1,4 @@
-# 🃏 Blackjack Online Web Browser Game 🎉
+# 🃏 Blackjack Online Web Browser Game
 
 A clean, modern, responsive and intuitive online Blackjack game built with the latest web technologies.
 

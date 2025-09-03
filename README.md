@@ -1,8 +1,8 @@
 # 🃏 Blackjack Online Web Browser Game
 
-A clean, modern, responsive and intuitive online Blackjack game built with the latest web technologies.
+A clean, modern, responsive and intuitive online Blackjack game built with JavaScript and React.
 
-Optimized for desktops, laptops of all sizes, and iPads with a connected hardware keyboard.
+Optimized for desktops, laptops of all sizes, and iPads with a connected physical keyboard.
 
 **Try it here:**  
 👉 https://florians-blackjack.vercel.app

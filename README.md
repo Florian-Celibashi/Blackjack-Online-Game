@@ -68,12 +68,4 @@ In-progress rounds (deck, hand states, etc.) are cached locally. When a round en
 - Online multiplayer via Supabase Realtime or WebSockets  
 - Expanded audio engine and animations  
 - User authentication (email or OAuth)  
-- Achievement system and seasonal leaderboards  
-
----
-
-## 🧑‍💻 Author  
-**Florian Celibashi**  
-B.S. Computer Science @ University of South Florida  
-📍 Tampa, FL  
-[LinkedIn](www.linkedin.com/in/florian-celibashi-88957335a) · [GitHub](https://github.com/Florian-Celibashi)
+- Achievement system and seasonal leaderboards

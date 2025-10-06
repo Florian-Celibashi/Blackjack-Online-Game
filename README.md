@@ -76,4 +76,4 @@ In-progress rounds (deck, hand states, etc.) are cached locally. When a round en
 **Florian Celibashi**  
 B.S. Computer Science @ University of South Florida  
 📍 Tampa, FL  
-[LinkedIn](https://linkedin.com/in/floriancelibashi) · [GitHub](https://github.com/Florian-Celibashi)
+[LinkedIn](www.linkedin.com/in/florian-celibashi-88957335a) · [GitHub](https://github.com/Florian-Celibashi)

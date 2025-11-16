@@ -85,6 +85,3 @@ Blackjack-Online-Game/
 - Dealer voiceovers, richer particle/card animations, and bet feedback.
 - Advanced betting options (split, double down, insurance) with chip tray UI.
 - Account-bound achievements and seasonal leaderboard resets.
-
-## 📄 License
-Distributed under the MIT License. Feel free to use and adapt for your own casino experiences.

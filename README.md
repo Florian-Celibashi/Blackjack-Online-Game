@@ -1,7 +1,8 @@
 # Blackjack Online Game · Multiplayer Casino Challenge
+# https://florians-blackjack.vercel.app
 
 ## 🧭 Overview
-- Browser-based blackjack table with smooth animations, ambient audio, and streak tracking.
+- Browser-based blackjack game with smooth animations, ambient audio, and streak tracking.
 - Persists player stats through Supabase so every session feels connected.
 - Built for quick rounds, responsive on desktop/mobile, and friendly to new players via guided tutorial.
 
@@ -60,23 +61,6 @@ Additional tips:
 - Ensure the Supabase project has a `blackjack_players` table with `id`, `username`, `win_count`, `loss_count`, and `streak` columns.
 - Grant insert/select/update permissions to the anon role or use row-level security policies that match your needs.
 
-## 🚀 Usage Examples
-### Run locally
-```bash
-npm run dev
-# open http://localhost:5173
-```
-
-### Add a custom username for the current player
-```js
-import { supabase } from './src/supabaseClient.js'
-
-await supabase
-  .from('blackjack_players')
-  .update({ username: 'CardShark' })
-  .eq('id', '<player-id>')
-```
-
 ## 📁 Folder Structure
 ```
 Blackjack-Online-Game/
@@ -99,6 +83,3 @@ Blackjack-Online-Game/
 - Advanced betting system with chips, insurance, and split mechanics.
 - Mobile-native gestures (swipe to hit/stand) and haptics.
 - Rich analytics dashboard with history charts and achievements.
-
-## 📄 License
-Distributed under the MIT License. See `LICENSE` (or add one) for details.

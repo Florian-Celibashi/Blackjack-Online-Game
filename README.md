@@ -1,4 +1,4 @@
-# Blackjack Online Game · Multiplayer Casino Challenge
+# Blackjack Online Game — Multiplayer Casino Challenge
 ### https://florians-blackjack.vercel.app
 
 ## 🧭 Overview

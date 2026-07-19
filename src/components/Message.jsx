@@ -1,6 +1,4 @@
-import React from 'react'
-
-function Message({ gameState, username }) {
+function Message({ gameState }) {
     let message = 'Your turn, press (H) to Hit or (S) to Stand.'
 
     if (gameState === 'player_busts') {
@@ -14,9 +12,6 @@ function Message({ gameState, username }) {
     } else if (gameState === 'dealer_busts') {
         message = 'Dealer busts! Press space to play again.'
     }
-    // else if (gameState === 'multiplayerWin' && username) {
-    //     message = `${username} wins!`
-    // }
     else if (gameState === 'dealer_turn') {
         message = "Dealer's turn."
     }

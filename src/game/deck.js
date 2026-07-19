@@ -17,10 +17,11 @@ export function createDeck() {
     return deck;
 }
 
-// Shuffle deck using Fisher-Yates algorithm
-export function shuffleDeck(deck) {
+// Shuffle deck using Fisher-Yates. The optional RNG keeps tests deterministic
+// while preserving Math.random as the production default.
+export function shuffleDeck(deck, random = Math.random) {
     for (let i = deck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(random() * (i + 1));
         [deck[i], deck[j]] = [deck[j], deck[i]];
     }
     return deck;

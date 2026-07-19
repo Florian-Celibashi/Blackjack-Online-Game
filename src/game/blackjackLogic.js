@@ -1,8 +1,8 @@
-import { createDeck, shuffleDeck } from './deck'
-import { calculateHandValue } from './blackjackScoring'
+import { createDeck, shuffleDeck } from './deck.js'
+import { calculateHandValue } from './blackjackScoring.js'
 
-export function startGame() {
-    const deck = shuffleDeck(createDeck());
+export function startGame(random = Math.random) {
+    const deck = shuffleDeck(createDeck(), random);
     const playerHand = [deck.pop(), deck.pop()];
     const dealerHand = [deck.pop(), deck.pop()];
 

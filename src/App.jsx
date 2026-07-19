@@ -37,9 +37,6 @@ function App() {
   useEffect(() => {
     ambianceRef.current = new Audio('/audio/casino_ambiance.wav')
     ambianceRef.current.loop = true
-    if (playAmbiance) {
-      ambianceRef.current.play()
-    }
     return () => {
       ambianceRef.current.pause()
     }
@@ -259,4 +256,3 @@ function App() {
 }
 
 export default App
-
